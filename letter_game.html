@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: cursive;
+}
+body{
+  width: 100%;
+  height: 100vh;
+  background: url('https://www.shutterstock.com/image-photo/colorful-random-wooden-letters-background-260nw-2190451539.jpg');
+  background-repeat: no-repeat;
+ background-size: 100% 110%;
+}
+#starter h2 {
+  color: #fff;
+  font-size: 15px;
+  font-size: 30px;
+}
+
+#starter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+#starter h3 a {
+  border: 1px solid #ddd;
+  padding: 5px;
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  background: red;
+  width: 100px;
+  font-size: 20px;
+  margin-top: 12px;
+  transition: 0.3s;
+}
+
+
+.game_wrapper {
+  max-width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  background: #00000099;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  overflow: hidden;
+  box-shadow: 1px 1px 2px 1px #ccc;
+  min-width: 370px;
+  width: 90%;
+}
+.ball {
+    color: white;
+    border-radius: 100px;
+    position: absolute;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 2%;
+    font-family: ar;
+    animation: popup .4s;
+}
+@keyframes popup{
+    0%{
+        width: 0px; height:0px;overflow: hidden;
+    }
+}
+.game_box {
+  width: 100%;
+  height: 50px;
+  background: #ddd;
+  text-align: center;
+  text-shadow: 1px 1px 1px;
+  font: 26px cursive;
+  padding: 10px;
+  border: 3px solid black;
+}
+    
+center h2 {
+  color: #fff;
+  font-size: 23px;
+  font-family: ari;
+}    
+    
+.restart_game {
+  margin-top: 158px;
+  font-size: 20px;
+}
+.res_now {
+  color: #fff;
+  margin-top: 140px !important;
+  display: block;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  padding: 5px;
+  background: #80008070;
+  font-size: 20px;
+  font-family: ar;
+}
+
+.color_dot {
+  color: red;
+}
+    
+     
+     
+     
+     
+     
+     
+     
+    
+     
+     
+     
+    </style>
+</head>
+<body>
+    <div class="game_wrapper" id="game">
+        <div class="game_box">
+            <span style="float:left"><span id="times">0</span></span>
+            Game Box
+            <span style="float:right">Points: <span id="points">0</span></span>
+        </div>
+        <center id="starter">
+            <h2 >New Game Typing Test<span class="color_dot">...</span></h2>
+            <h3><a href="javascript:void(0)" onclick="startGame()">Start Now.</a></h3>
+        </center>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        let game = $("#game");
+
+        function createBall(l,t){
+            let radius = getRadius(), bg = getColor(), key = getKey();
+            
+
+            let html = `<span class="ball" key="`+key+`" style="background:`+bg+`;width:`+radius+`px;
+             height: `+radius+`px;top:`+(t - radius/2) +`px; 
+             left: `+( l - radius/2 )+`px">
+             `+String.fromCharCode(key)+`
+             </span>`;
+             game.append(html);
+        }
+        function getRadius(){
+            return Number(30 + Number(Math.floor((Math.random() * 100000000000000) % 20)));
+        }
+
+        function getColor(){
+            return "#" + Math.floor((Math.random() * 100000000000000) % 9) + Math.floor((Math.random() * 100000000000000) % 9) + Math.floor((Math.random() * 100000000000000) % 9) + Math.floor((Math.random() * 100000000000000) % 9) + Math.floor((Math.random() * 100000000000000) % 9) + Math.floor((Math.random() * 100000000000000) % 9);
+        }
+        function getKey(){
+            let keyCode = Number(97 + Math.floor(Math.random() *100000000 % 26));
+            return keyCode;
+        }
+        let p = 0;
+        $(document).keypress(function(e){
+            let code = e.which;
+            let found = false;
+            $(".ball").each(function(index, elem){
+                if($(elem).attr("key") == code){
+                    found = true;
+                    $(elem).remove();
+                    return false;
+                }
+            });
+            if(found){
+                p++;
+            } else {
+                p--;
+            }
+            updatePoints();
+            startTimer();
+        });
+        function updatePoints(){
+            $("#points").text(p);
+        }
+        function updateTime(t){
+            $("#times").text(Number(Math.floor(t/60)) + " : " + t%60);
+        }
+        let t = null;
+        let time = 30;
+        function generateBall(){
+            t = setInterval(function(){
+                let l = 50+ Number(Math.floor(Math.random()*2000000 % 300));
+                let ts = 100 + Number(Math.floor(Math.random()*2000000 % 300));
+                createBall(l,ts);
+
+            },
+            500);
+            
+        }
+        let xTime = null;
+        function startTimer(){
+            if(xTime != null) return;
+            xTime = setInterval(function(){
+            updateTime(--time);
+            if(time == 0){
+                clearInterval(t);
+                clearInterval(xTime);
+                gameOver();
+            }
+            },1000);
+            
+        }
+        
+        function startGame(){
+            generateBall();
+            $("#starter").hide("slow");
+            startTimer();
+        }
+        function gameOver(){
+            $("span.ball").remove();
+            $("#game").append("<center class='restart_game'><h2>Game Over !</h2><h2>Your Score :"+ p +"</h2> <h3><a href='' class='res_now'>Restart Now.</a></h3></center>")
+        }
+        $("#times").text(Number(Math.floor(time/60)) + " : " + time%60);
+    </script>
+    <footer style="position: fixed; bottom: 2px; right: 10px; color: rgb(124, 255, 2); text-shadow: 1px 1px 1px #080101;font-size: 30px; font-weight: bold;">Designed By Biplob & Moni</footer>
+</body>
+</html>
